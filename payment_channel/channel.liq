@@ -1,7 +1,5 @@
 [%%version 0.3]
 
-(* https://medium.com/@matthewdif/ethereum-payment-channel-in-50-lines-of-code-a94fad2704bc *)
-
 type storage = {
   channel_sender: key;
   channel_recipient: key;
