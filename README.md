@@ -1,2 +1,2 @@
 # tezos-ligthning
-A POC for Tezos off-chain transactions
+Experiments for Tezos off-chain transactions, state channels and ligthning.
