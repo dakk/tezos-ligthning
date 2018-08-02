@@ -1,4 +1,4 @@
-[%%version 0.3]
+[%%version 0.36]
 
 type storage = {
   channel_sender: key;
@@ -42,10 +42,10 @@ let%entry main (parameter: action) (storage: storage) = match parameter with
 	(* generate the proof *)
 	let proof = Crypto.sha256 (tez2bytes value) in
 
-	if proof <> h then Current.failwith ();
+	if proof <> h then Current.failwith "Invalid proof";
 
 	match signer with
-	| None -> Current.failwith () 
+	| None -> Current.failwith "Invalid signer"
 	| Some (signer') -> 
 		if Map.mem proof storage.signatures then (
 			let storage = storage.signatures <- Map.add proof (signer') storage.signatures in
@@ -58,13 +58,13 @@ let%entry main (parameter: action) (storage: storage) = match parameter with
 					let op' = Contract.call (Account.default (Crypto.hash_key storage.channel_sender)) (Current.balance () - value) () in
 					( [op; op'], storage )
 				) 
-				else (Current.failwith () )
+				else (Current.failwith "Calling from the same signer" )
 			| None -> 
-				Current.failwith () 
+				Current.failwith "Proof not found" 
 	)
 | Timeout -> (
 	if storage.start_date + storage.channel_timeout > Current.time () then 
-		Current.failwith ()
+		Current.failwith "Timeout not already reached" 
 	else 
 		let op' = Contract.call (Account.default (Crypto.hash_key storage.channel_sender)) (Current.balance ()) () in
 		( [op'], storage )
