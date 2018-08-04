@@ -1,0 +1,2 @@
+all:
+	liquidity channel.liq
